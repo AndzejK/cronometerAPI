@@ -37,7 +37,6 @@ go run main.go 10/30/2025
 Output:
 go run main.go 10/30/2025
 
-
 Invalid date format. Please use YYYY-MM-DD format
 ✅ Correct format: YYYY-MM-DD
 ❌ Wrong format: MM/DD/YYYY

@@ -33,7 +33,12 @@ func main() {
 	// Get reports directory from environment variable, or use default
 	reportsDir := os.Getenv("CRONOMETER_REPORTS_DIR")
 	if reportsDir == "" {
-		reportsDir = `C:\GO\reports`
+		//reportsDir = `C:\GO\reports`
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+		log.Fatalf("failed to get user home directory: %v", err)
+		}
+		reportsDir = filepath.Join(homeDir, "cronometer_reports")
 	}
 
 	// Create the reports directory if it doesn't exist

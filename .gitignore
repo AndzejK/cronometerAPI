@@ -1,0 +1,12 @@
+# Ignore sensitive credential files
+credentials.json
+token.json
+
+# Ignore local reports
+*.csv
+*.txt
+
+# Ignore Go build artifacts
+*.exe
+*.test
+coffeeproject

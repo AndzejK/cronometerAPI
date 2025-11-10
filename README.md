@@ -1,17 +1,18 @@
 # Cronometer to Google Sheets Exporter
 
 This Go application automates exporting your daily data from Cronometer. It performs two main actions:
+
 1.  Saves all daily reports (servings, biometrics, notes) as CSV files to a local directory on your computer.
-2.  Appends all data rows from the daily `servings` report directly to a Google Sheet of your choice.
+2.  Appends all data rows from the daily `servings` and `biometrics` reports directly to specified Google Sheets.
 
 ---
 
 ## Features
 
--   **Dual Export:** Saves raw data locally and pushes key data to the cloud.
--   **Google Sheets Integration:** Automatically appends daily food diary entries to a specified Google Sheet.
--   **Flexible Date Selection:** Run for a specific date or let it default to yesterday.
--   **Secure Configuration:** Uses environment variables for all credentials and configuration, so no secrets are stored in the code.
+- **Dual Export:** Saves raw data locally and pushes key data to the cloud.
+- **Google Sheets Integration:** Automatically appends daily servings and biometrics data to separate sheets.
+- **Flexible Date Selection:** Run for a specific date or let it default to yesterday.
+- **Secure and Customizable:** Uses environment variables for all credentials and configuration.
 
 ---
 
@@ -27,23 +28,24 @@ This application uses the Google Sheets API. You must create your own credential
 2.  **Create a New Project:** Give it a name like `Cronometer-Sheets-Integration`.
 3.  **Enable the Google Sheets API:** In the search bar, find and **ENABLE** the "Google Sheets API".
 4.  **Configure OAuth Consent Screen:**
-    *   Go to **APIs & Services > OAuth consent screen**.
-    *   Choose **"External"** and click **Create**.
-    *   Fill in the required fields (App name, your email). Click **Save and Continue** through the "Scopes" and "Optional Info" pages.
-    *   On the **Test users** page, add your own Google email address. This is a critical step.
+    - Go to **APIs & Services > OAuth consent screen**.
+    - Choose **"External"** and click **Create**.
+    - Fill in the required fields (App name, your email). Click **Save and Continue** through the "Scopes" and "Optional Info" pages.
+    - On the **Test users** page, add your own Google email address. This is a critical step.
 5.  **Create Credentials:**
-    *   Go to **APIs & Services > Credentials**.
-    *   Click **+ CREATE CREDENTIALS** and select **"OAuth client ID"**.
-    *   Set the **Application type** to **"Desktop app"** and click **Create**.
+    - Go to **APIs & Services > Credentials**.
+    - Click **+ CREATE CREDENTIALS** and select **"OAuth client ID"**.
+    - Set the **Application type** to **"Desktop app"** and click **Create**.
 6.  **Download the File:**
-    *   In the credentials list, find the one you just created and click the **download icon**.
-    *   **IMPORTANT:** Rename the downloaded file to `credentials.json` and place it in the root of this project directory. This file should be ignored by Git and never be made public.
+    - In the credentials list, find the one you just created and click the **download icon**.
+    - **IMPORTANT:** Rename the downloaded file to `credentials.json` and place it in the root of this project directory. This file should be ignored by Git and never be made public.
 
 ### 2. Set Environment Variables
 
-This application is configured using environment variables.
+This application is configured using environment variables. Choose the section for your operating system.
 
-**On macOS/Linux:**
+**On macOS/Linux (bash/zsh):**
+
 ```bash
 # Cronometer Credentials
 export CRONOMETER_EMAIL="your_email@example.com"
@@ -51,18 +53,38 @@ export CRONOMETER_PASSWORD="your_secure_password"
 
 # Google Sheets Configuration
 export SPREADSHEET_ID="your_google_sheet_id_here"
-export GOOGLE_SHEET_NAME="reportCronoNov" # Or whatever your sheet is named
+export GOOGLE_SHEET_NAME="reportCronoNov"   # Target sheet for servings data
+# The sheet for biometrics is currently set to "biometricsReport" in the code.
 
-# Optional: Local reports directory (defaults to a folder in your home dir)
+# Optional: Local reports directory
 # export CRONOMETER_REPORTS_DIR="/path/to/your/reports"
 ```
 
-**On Windows (Command Prompt):**
+**On Windows (PowerShell):**
+
+```powershell
+# Cronometer Credentials
+$env:CRONOMETER_EMAIL="your_email@example.com"
+$env:CRONOMETER_PASSWORD="your_secure_password"
+
+# Google Sheets Configuration
+$env:SPREADSHEET_ID="your_google_sheet_id_here"
+$env:GOOGLE_SHEET_NAME="reportCronoNov"   # Target sheet for servings data
+
+# Optional: Local reports directory
+# $env:CRONOMETER_REPORTS_DIR="C:\path\to\your\reports"
+```
+
+**On Windows (Command Prompt - cmd.exe):**
+
 ```cmd
 set CRONOMETER_EMAIL="your_email@example.com"
 set CRONOMETER_PASSWORD="your_secure_password"
 set SPREADSHEET_ID="your_google_sheet_id_here"
 set GOOGLE_SHEET_NAME="reportCronoNov"
+
+:: Optional: Local reports directory
+:: set CRONOMETER_REPORTS_DIR="C:\path\to\your\reports"
 ```
 
 ---
@@ -83,7 +105,9 @@ set GOOGLE_SHEET_NAME="reportCronoNov"
     ```
 
 ### First-Time Google Authentication
+
 The very first time you run the application, it will prompt you to authorize it with Google:
+
 1.  It will print a URL in the terminal. Copy and paste this into your browser.
 2.  Choose your Google account and grant the requested permissions.
 3.  Google will give you an authorization code. Copy this code.

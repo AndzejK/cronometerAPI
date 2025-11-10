@@ -225,6 +225,49 @@ func main() {
 		log.Fatalf("Unable to append data to sheet: %v", err)
 	}
 
-	fmt.Printf("✓ Successfully appended totals row to sheet '%s'.\n", sheetName)
-	fmt.Println("\n=== All tasks complete ===")
+	fmt.Printf("✓ Successfully appended servings data to sheet '%s'.\n", sheetName)
+
+	// --- Action 3: Append Biometrics to Google Sheets ---
+	biometricsSheetName := "biometricsReport" // As requested
+	fmt.Printf("\nPreparing to append biometrics data to Google Sheet: %s\n", biometricsSheetName)
+
+	// Read the biometrics CSV file we saved earlier
+	biometricsFile, err := os.Open(biometricsPath)
+	if err != nil {
+		log.Fatalf("Failed to open biometrics CSV for reading: %v", err)
+	}
+	defer biometricsFile.Close()
+
+	biometricsReader := csv.NewReader(biometricsFile)
+	biometricsRecords, err := biometricsReader.ReadAll()
+	if err != nil {
+		log.Fatalf("Failed to parse biometrics CSV: %v", err)
+	}
+
+	if len(biometricsRecords) <= 1 {
+		fmt.Println("No data rows found in biometrics report. Nothing to append.")
+	} else {
+		// Use all records *except* the header row
+		var biometricsValues [][]interface{}
+		for _, record := range biometricsRecords[1:] { // Start from the second row
+			row := make([]interface{}, len(record))
+			for i, v := range record {
+				row[i] = v
+			}
+			biometricsValues = append(biometricsValues, row)
+		}
+
+		// Append the data
+		biometricsAppendRange := biometricsSheetName
+		biometricsValueRange := &sheets.ValueRange{
+			Values: biometricsValues,
+		}
+		_, err = sheetsService.Spreadsheets.Values.Append(spreadsheetId, biometricsAppendRange, biometricsValueRange).ValueInputOption("USER_ENTERED").InsertDataOption("INSERT_ROWS").Do()
+		if err != nil {
+			log.Fatalf("Unable to append biometrics data to sheet: %v", err)
+		}
+		fmt.Printf("✓ Successfully appended biometrics data to sheet '%s'.\n", biometricsSheetName)
+	}
+
+	fmt.Println("\n=== All tasks complete! ===")
 }

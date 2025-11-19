@@ -53,7 +53,8 @@ export CRONOMETER_PASSWORD="your_secure_password"
 
 # Google Sheets Configuration
 export SPREADSHEET_ID="your_google_sheet_id_here"
-export GOOGLE_SHEET_NAME="reportCronoNov"   # Target sheet for servings data
+export GOOGLE_SHEET_NAME="name_of_sheet_for_servings"   # Target sheet for servings data
+export BIOMETRICS_SHEET_NAME="name_of_sheet_for_biometrics"  # Optional, defaults to "biometricsReport"
 # The sheet for biometrics is currently set to "biometricsReport" in the code.
 
 # Optional: Local reports directory
@@ -69,7 +70,8 @@ $env:CRONOMETER_PASSWORD="your_secure_password"
 
 # Google Sheets Configuration
 $env:SPREADSHEET_ID="your_google_sheet_id_here"
-$env:GOOGLE_SHEET_NAME="reportCronoNov"   # Target sheet for servings data
+$env:GOOGLE_SHEET_NAME="name_of_sheet_for_servings"   # Target sheet for servings data
+$env:BIOMETRICS_SHEET_NAME="name_of_sheet_for_biometrics"  # Optional, defaults to "biometricsReport"
 
 # Optional: Local reports directory
 # $env:CRONOMETER_REPORTS_DIR="C:\path\to\your\reports"
@@ -81,7 +83,8 @@ $env:GOOGLE_SHEET_NAME="reportCronoNov"   # Target sheet for servings data
 set CRONOMETER_EMAIL="your_email@example.com"
 set CRONOMETER_PASSWORD="your_secure_password"
 set SPREADSHEET_ID="your_google_sheet_id_here"
-set GOOGLE_SHEET_NAME="reportCronoNov"
+set GOOGLE_SHEET_NAME="name_of_sheet_for_servings"
+set BIOMETRICS_SHEET_NAME="name_of_sheet_for_biometrics"
 
 :: Optional: Local reports directory
 :: set CRONOMETER_REPORTS_DIR="C:\path\to\your\reports"
@@ -108,57 +111,47 @@ set GOOGLE_SHEET_NAME="reportCronoNov"
 
 The very first time you run the application, it will prompt you to authorize it with Google:
 
-1.  It will print a URL in the terminal. Copy and paste this into your browser.
-2.  Choose your Google account and grant the requested permissions.
-3.  Google will give you an authorization code. Copy this code.
-4.  Paste the code back into your terminal where the application is waiting.
+1. **The application will print a URL in the terminal.** Copy and paste this entire URL into your browser.
 
-<<<<<<< HEAD
-Invalid date format. Please use YYYY-MM-DD format
-✅ Correct format: YYYY-MM-DD
-❌ Wrong format: MM/DD/YYYY
+2. **Choose your Google account** and grant the requested permissions (Google Sheets access).
 
-### 📅 Bonus: Export a Date Range (Optional Feature)
+3. **After authorization, Google will redirect you to a URL that looks like this:**
+```
+   http://localhost/?state=state-token&code=4/0Ab32j9322yqmpk6vj05jmT4mXzoZ-N5C7DemoTesTKHiUOoBPi2Iz3xYu6SnOWh21YlRg&scope=https://www.googleapis.com/auth/spreadsheets
+```
 
-If you want to export multiple days at once, you can extend the script to accept a date range:
+4. **Copy ONLY the authorization code** - the part that comes after `code=` and stops **before** the `&` symbol:
+   
+   **✅ CORRECT - Copy this (no `&` at the end):**
+```
+   4/0Ab32j9322yqmpk6vj05jmT4mXzoZ-N5C7DemoTesTKHiUOoBPi2Iz3xYu6SnOWh21YlRg
+```
+   
+   **❌ WRONG - Do NOT include the `&` or anything after it:**
+```
+   4/0Ab32j9322yqmpk6vj05jmT4mXzoZ-N5C7DemoTesTKHiUOoBPi2Iz3xYu6SnOWh21YlRg&scope=https://www.googleapis.com/auth/spreadsheets
+```
+   
+   **Visual guide:**
+```
+   http://localhost/?state=state-token&code=4/0Ab32j9322yqmpk6vj05jmT4mXzoZ-N5C7DemoTesTKHiUOoBPi2Iz3xYu6SnOWh21YlRg&scope=https://www.googleapis.com/auth/spreadsheets
+                                          ↑                                                                              ↑
+                                      START copying here                                                          STOP before the &
+```
 
-go run main.go 2025-10-01 2025-10-31
+5. **Paste ONLY this code** (without the `&`) back into your terminal where the application is waiting.
 
-### 📂 Custom Output Directory
+6. Press Enter, and the application will complete the authentication.
 
-You can change where reports are saved without modifying the code — simply use an environment variable.
+A `token.json` file will be created to store your login session, so you won't have to do this again unless you delete it or the token expires.
 
-Example Go snippet:
-// Get reports directory from environment variable, or use default
-reportsDir := os.Getenv("CRONOMETER_REPORTS_DIR")
-if reportsDir == "" {
-	reportsDir = `C:\GO\reports`
-}
+**Common Mistakes:**
+- ❌ Including `&scope=...` at the end
+- ❌ Copying the entire URL
+- ❌ Including the `&` symbol
+- ✅ Only copy the code value itself (starts with `4/0` in the example)
 
-### Set environment variable:
-``` PowerShell (Windows)
-$env:CRONOMETER_REPORTS_DIR = "D:\MyReports"
-
-``` Linux / macOS (bash)
-export CRONOMETER_REPORTS_DIR=/home/user/reports
-
-### 🔐 Credentials
-
-Before running, make sure you’ve set your Cronometer login details as environment variables:
-
-export CRONOMETER_EMAIL="your@email.com"
-export CRONOMETER_PASSWORD="your_password"
-
-
-⚠️ Security tip: Avoid hardcoding your credentials in code.
-Use environment variables or a .env file (excluded from Git) for safety.
-
-### 🧩 Example Folder Structure
-📁 reports/
- ┣ 📄 servings_2025-10-30.csv
- ┣ 📄 biometrics_2025-10-30.csv
- ┣ 📄 notes_2025-10-30.csv
- ┗ 📄 servings_formatted_2025-10-30.txt
-=======
-A `token.json` file will be created to store your login session, so you won't have to do this again unless you delete it.
->>>>>>> 0c30ce0a4104f23b58960bc0ef8220e0e962afde
+**Troubleshooting:**
+- If the browser shows "This site can't be reached" - that's normal! Just copy the code from the URL bar
+- If authentication fails, double-check you didn't include the `&` or anything after it
+- The code should typically start with `4/0` and contain only letters, numbers, hyphens, and underscores

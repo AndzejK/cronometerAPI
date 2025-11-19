@@ -116,26 +116,30 @@ The very first time you run the application, it will prompt you to authorize it 
 2. **Choose your Google account** and grant the requested permissions (Google Sheets access).
 
 3. **After authorization, Google will redirect you to a URL that looks like this:**
+
 ```
    http://localhost/?state=state-token&code=4/0Ab32j9322yqmpk6vj05jmT4mXzoZ-N5C7DemoTesTKHiUOoBPi2Iz3xYu6SnOWh21YlRg&scope=https://www.googleapis.com/auth/spreadsheets
 ```
 
 4. **Copy ONLY the authorization code** - the part that comes after `code=` and stops **before** the `&` symbol:
-   
+
    **✅ CORRECT - Copy this (no `&` at the end):**
+
 ```
    4/0Ab32j9322yqmpk6vj05jmT4mXzoZ-N5C7DemoTesTKHiUOoBPi2Iz3xYu6SnOWh21YlRg
 ```
-   
-   **❌ WRONG - Do NOT include the `&` or anything after it:**
+
+**❌ WRONG - Do NOT include the `&` or anything after it:**
+
 ```
    4/0Ab32j9322yqmpk6vj05jmT4mXzoZ-N5C7DemoTesTKHiUOoBPi2Iz3xYu6SnOWh21YlRg&scope=https://www.googleapis.com/auth/spreadsheets
 ```
-   
-   **Visual guide:**
+
+**Visual guide:**
+
 ```
    http://localhost/?state=state-token&code=4/0Ab32j9322yqmpk6vj05jmT4mXzoZ-N5C7DemoTesTKHiUOoBPi2Iz3xYu6SnOWh21YlRg&scope=https://www.googleapis.com/auth/spreadsheets
-                                          ↑                                                                              ↑
+                                            ↑                                                                       ↑
                                       START copying here                                                          STOP before the &
 ```
 
@@ -146,12 +150,14 @@ The very first time you run the application, it will prompt you to authorize it 
 A `token.json` file will be created to store your login session, so you won't have to do this again unless you delete it or the token expires.
 
 **Common Mistakes:**
+
 - ❌ Including `&scope=...` at the end
 - ❌ Copying the entire URL
 - ❌ Including the `&` symbol
 - ✅ Only copy the code value itself (starts with `4/0` in the example)
 
 **Troubleshooting:**
+
 - If the browser shows "This site can't be reached" - that's normal! Just copy the code from the URL bar
 - If authentication fails, double-check you didn't include the `&` or anything after it
 - The code should typically start with `4/0` and contain only letters, numbers, hyphens, and underscores
